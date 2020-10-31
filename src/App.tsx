@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 import Splash from './pages/Splash';
@@ -20,6 +20,22 @@ import {
 function App() {
 
   const [isSplash, setIsSplash] = React.useState<Boolean>(true)
+  const [adminDrop, setAdminDrop] = React.useState<Boolean>(false)
+
+  useEffect(():void => {
+    let realBody = document.getElementById("super-wrapper")
+    if(realBody){
+      realBody.addEventListener("click", (): void => {
+        if(adminDrop === true)
+        setAdminDrop(false)
+      })
+    }
+  })
+
+  const toggleDropdown = ():void => {
+    setAdminDrop(!adminDrop)
+
+  }
 
   return (
     <Router>
@@ -34,9 +50,17 @@ function App() {
           <Link to="/training-plans">Training Plan</Link>
         </div>
         <div id="nav-admin-link">
-          <Link to="">Aministration</Link>
+          <button onClick={toggleDropdown}>Aministration</button>
+        {adminDrop &&
+          <div id="dropdown-menu">
+            <Link to="/trainees">Trainees</Link>
+            <Link to="/users">Users</Link>
+            <Link to="media">Media</Link>
+          </div>
+        }
         </div>
       </nav>
+      <div id="super-wrapper">
       <Switch>
         <Route exact path="/" component={Splash}/>
         <Route exact path="/muscles" component={Muscles}/>
@@ -47,6 +71,7 @@ function App() {
         <Route exact path="/users" component={Users}/>
         <Route exact path="/media" component={Media}/>
       </Switch>
+      </div>
     </Router>
   );
 }
