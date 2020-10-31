@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 import Splash from './pages/Splash';
@@ -13,12 +13,30 @@ import Workouts from './pages/Workouts';
 import {
   BrowserRouter as Router,
   Route,
-  Switch
+  Switch,
+  Link
 } from "react-router-dom";
 
 function App() {
+
+  const [isSplash, setIsSplash] = React.useState<Boolean>(true)
+
   return (
     <Router>
+      <nav>
+        <div id="nav-logo">
+          <p id="login-heading">Barbell Club</p>
+        </div>
+        <div id="nav-links">
+          <Link to="/muscles">Muscles</Link>
+          <Link to="/exercises">Exercises</Link>
+          <Link to="/workouts">Workouts</Link>
+          <Link to="/training-plans">Training Plan</Link>
+        </div>
+        <div id="nav-admin-link">
+          <Link to="">Aministration</Link>
+        </div>
+      </nav>
       <Switch>
         <Route exact path="/" component={Splash}/>
         <Route exact path="/muscles" component={Muscles}/>
