@@ -24,14 +24,15 @@ nav {
 #nav-logo {
   grid-column: 1 / span 1;
   height: 100%;
+  padding-left: 15px;
   display: flex;
   align-items: center;
-  padding-left: 15px;
 }
 
-#login-heading {
+#login-heading-nav {
   font-family: Zilla Slab Highlight;
   color: white;
+  font-size: 40px;
 }
 
 #nav-links {

@@ -25,7 +25,7 @@ function App() {
     <Router>
       <nav>
         <div id="nav-logo">
-          <p id="login-heading">Barbell Club</p>
+          <p id="login-heading-nav">Barbell Club</p>
         </div>
         <div id="nav-links">
           <Link to="/muscles">Muscles</Link>
