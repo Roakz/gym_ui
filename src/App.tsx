@@ -57,7 +57,7 @@ function App() {
     <Router>
       <nav>
         <div id="nav-logo">
-          <p id="login-heading-nav">Barbell Club</p>
+          <a href="/"><p id="login-heading-nav">Barbell Club</p></a>
         </div>
         <div id="nav-links">
           <Link className="navlink" to="/muscles">Muscles</Link>
@@ -72,6 +72,7 @@ function App() {
             <Link to="/trainees">Trainees</Link>
             <Link to="/users">Users</Link>
             <Link to="media">Media</Link>
+            <Link to="/">Dashboard</Link>
           </div>
         }
         </div>
