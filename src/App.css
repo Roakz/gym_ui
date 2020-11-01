@@ -43,15 +43,15 @@ nav {
  justify-content: space-evenly;
 }
 
-#nav-links a {
+.navlink{
   font-family: 'Open Sans', sans-serif;
   color: #BDBDBD;
   font-size: 23px;
   text-decoration: none;
 }
 
-.nav-link-activated {
-  color: #FFFFFF;
+.nav-link-activated, .navlink:hover{
+  color: #FFFFFF; 
 }
 
 #nav-admin-link, a {
@@ -144,3 +144,4 @@ nav {
   justify-content: space-evenly;
   align-items: center;
 }
+

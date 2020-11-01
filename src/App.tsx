@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 
 import Splash from './pages/Splash';
@@ -19,22 +19,38 @@ import {
 
 function App() {
 
-  const [isSplash, setIsSplash] = React.useState<Boolean>(true)
-  const [adminDrop, setAdminDrop] = React.useState<Boolean>(false)
+  const [isSplash, setIsSplash] = useState<Boolean>(true)
+  const [adminDrop, setAdminDrop] = useState<Boolean>(false)
 
   useEffect(():void => {
-    let realBody = document.getElementById("super-wrapper")
+    let realBody: Element | null = document.getElementById("super-wrapper")
     if(realBody){
       realBody.addEventListener("click", (): void => {
         if(adminDrop === true)
         setAdminDrop(false)
       })
     }
-  })
+
+    let navLinksDiv: Element | null = document.getElementById("nav-links")
+    console.log(navLinksDiv)
+    let navLinks: HTMLCollectionOf<Element> | undefined = navLinksDiv?.getElementsByClassName("navlink")
+    if (navLinks) {
+      console.log(navLinks)
+      for(let i = 0; i < navLinks.length; i++) {
+        navLinks[i].addEventListener("click", function(this: Element):void {
+          let current: HTMLCollectionOf<Element> = document.getElementsByClassName("nav-link-activated")
+          if (current.length > 0) {
+            current[0].className = current[0].className.replace("nav-link-activated", "")
+          }
+          this.className += " nav-link-activated"
+          console.log(this.className)
+        });
+      }
+    }
+  });
 
   const toggleDropdown = ():void => {
     setAdminDrop(!adminDrop)
-
   }
 
   return (
@@ -44,10 +60,10 @@ function App() {
           <p id="login-heading-nav">Barbell Club</p>
         </div>
         <div id="nav-links">
-          <Link to="/muscles">Muscles</Link>
-          <Link to="/exercises">Exercises</Link>
-          <Link to="/workouts">Workouts</Link>
-          <Link to="/training-plans">Training Plan</Link>
+          <Link className="navlink" to="/muscles">Muscles</Link>
+          <Link className="navlink" to="/exercises">Exercises</Link>
+          <Link className="navlink" to="/workouts">Workouts</Link>
+          <Link className="navlink" to="/training-plans">Training Plan</Link>
         </div>
         <div id="nav-admin-link">
           <button onClick={toggleDropdown}>Aministration</button>
