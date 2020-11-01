@@ -1,4 +1,6 @@
 import React, {useEffect, useState} from 'react';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 import Splash from './pages/Splash';
@@ -57,7 +59,7 @@ function App() {
     <Router>
       <nav>
         <div id="nav-logo">
-          <a href="/"><p id="login-heading-nav">Barbell Club</p></a>
+          <Link to="/"><p id="login-heading-nav">Barbell Club</p></Link>
         </div>
         <div id="nav-links">
           <Link className="navlink" to="/muscles">Muscles</Link>
@@ -66,13 +68,13 @@ function App() {
           <Link className="navlink" to="/training-plans">Training Plan</Link>
         </div>
         <div id="nav-admin-link">
-          <button onClick={toggleDropdown}>Aministration</button>
+          <button onClick={toggleDropdown}>Administration</button>
         {adminDrop &&
           <div id="dropdown-menu">
+            <Link to="/">Dashboard</Link>
             <Link to="/trainees">Trainees</Link>
             <Link to="/users">Users</Link>
             <Link to="media">Media</Link>
-            <Link to="/">Dashboard</Link>
           </div>
         }
         </div>
