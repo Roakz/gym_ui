@@ -1,17 +1,20 @@
 import * as React from 'react';
 import Table from 'react-bootstrap/Table';
+import AddCard from '../components/AddCard';
 
 interface IndexTableProps {
-  columnHeaders?: Array<String>
+  columnHeaders: Array<String>
+  entity: String
 }
 
 function IndexTable(props: IndexTableProps){  
   return (
+    <>
     <Table striped bordered hover>
   <thead>
     <tr>
       <th>#</th>
-      {props.columnHeaders?.map(function(element, index){
+      {props.columnHeaders.map(function(element, index){
         return <th key={index}>{element}</th>
       })}
     </tr>
@@ -33,7 +36,10 @@ function IndexTable(props: IndexTableProps){
     </tr>
     
   </tbody>
-</Table>
+  </Table>
+  <hr></hr>
+  <AddCard entity={props.entity}/>
+  </>
   )
 };
 
