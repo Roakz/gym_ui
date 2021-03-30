@@ -25,7 +25,8 @@ interface IProps {
 }
 
 const initialState: any = {
-  userId: null
+  userId: null,
+  userObj: null
 };
 
 export const store = createContext(initialState);
@@ -39,11 +40,9 @@ const StateProvider = ({children}: IProps) => {
     const currentState = {...state};
 
     switch (action.type) {
-      case 'SET_USER_ID':
-        console.log(action)
-        currentState.userId = action.payload
-        console.log(currentState)
-        return currentState;
+      case 'SET_USER_OBJ':
+        currentState.userObj = action.payload
+        return currentState
     }
   }, initialState);
   return <Provider value={{state, dispatch}}>{children}</Provider>
