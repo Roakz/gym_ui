@@ -11,6 +11,7 @@ import Trainees from './pages/Trainees';
 import TrainingPlans from './pages/TrainingPlans';
 import Users from './pages/Users';
 import Workouts from './pages/Workouts';
+import jwt_decode from 'jwt-decode';
 
 import {
   BrowserRouter as Router,
@@ -25,7 +26,6 @@ interface IProps {
 }
 
 const initialState: any = {
-  userId: null,
   userObj: null
 };
 
@@ -78,6 +78,12 @@ function App() {
         });
       }
     }
+
+    // check for state 
+    let jwt: string | null = localStorage.getItem('JWT');
+    if (jwt) {
+       initialState.userObj = jwt_decode(jwt)
+      }
   });
 
   const toggleDropdown = ():void => {

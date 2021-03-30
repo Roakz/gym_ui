@@ -6,7 +6,7 @@ const axios = require('axios').default;
 
 const LoginComponent: React.FC = () => {
 
-  const {state, dispatch} = React.useContext(store);
+  const {dispatch} = React.useContext(store);
 
   const createSession = (jwt: string):void => {
     localStorage.setItem('JWT', jwt)
