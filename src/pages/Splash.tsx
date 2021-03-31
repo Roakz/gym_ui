@@ -1,7 +1,15 @@
 import * as React from 'react';
-import Login from '../components/Login'
+import Login from '../components/Login';
+import {Dispatch, SetStateAction} from 'react';
 
-const SplashPage: React.FC = () => {
+interface ISplashPageProps {
+  setIsSplash: Dispatch<SetStateAction<boolean>>;
+}
+
+function SplashPage(props: ISplashPageProps){
+
+  props.setIsSplash(true);
+
   return (
     <div id="splash-page-wrapper">
        <Login />

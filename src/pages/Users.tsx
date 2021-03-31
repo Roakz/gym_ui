@@ -13,7 +13,7 @@ const UsersPage: React.FC = () => {
         <p className="table-heading">
           Users
         </p>
-        <IndexTable columnHeaders={["First Name", "Last Name", "Username", "Reset Link" ]} entity="User"/>
+        <IndexTable columnHeaders={["Full Name", "Username", "Email", "Phone", "Role", "Password Reset" ]} entity="User"/>
     </div>
   )
 };

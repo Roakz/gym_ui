@@ -50,7 +50,7 @@ const StateProvider = ({children}: IProps) => {
 
 function App() {
 
-  const [isSplash, setIsSplash] = useState<Boolean>(true);
+  const [isSplash, setIsSplash] = useState<boolean>(false);
   const [adminDrop, setAdminDrop] = useState<Boolean>(false);
 
   useEffect(():void => {
@@ -93,6 +93,7 @@ function App() {
   return (
     <StateProvider>
       <Router>
+        { isSplash == false &&
         <nav>
           <div id="nav-logo">
             <Link to="/"><p id="login-heading-nav">Barbell Club</p></Link>
@@ -115,9 +116,12 @@ function App() {
           }
           </div>
         </nav>
+        }
         <div id="super-wrapper">
         <Switch>
-          <Route exact path="/" component={Splash}/>
+          <Route exact path="/" render={(props) => (
+           <Splash {...props} setIsSplash={setIsSplash} />
+          )}/>
           <Route exact path="/muscles" component={Muscles}/>
           <Route exact path="/exercises" component={Exercises}/>
           <Route exact path="/workouts" component={Workouts}/>
