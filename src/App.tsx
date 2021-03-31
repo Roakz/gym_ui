@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, createContext, useReducer, ReactNode} from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -11,6 +11,7 @@ import Trainees from './pages/Trainees';
 import TrainingPlans from './pages/TrainingPlans';
 import Users from './pages/Users';
 import Workouts from './pages/Workouts';
+import jwt_decode from 'jwt-decode';
 
 import {
   BrowserRouter as Router,
@@ -19,10 +20,38 @@ import {
   Link
 } from "react-router-dom";
 
+interface IProps {
+  children: ReactNode;
+  // any other props that come into the component
+}
+
+const initialState: any = {
+  userObj: null
+};
+
+export const store = createContext(initialState);
+
+const {Provider} = store;
+
+const StateProvider = ({children}: IProps) => {
+
+  const [state, dispatch] = useReducer((state: any, action: any) => {
+
+    const currentState = {...state};
+
+    switch (action.type) {
+      case 'SET_USER_OBJ':
+        currentState.userObj = action.payload
+        return currentState
+    }
+  }, initialState);
+  return <Provider value={{state, dispatch}}>{children}</Provider>
+}
+
 function App() {
 
-  const [isSplash, setIsSplash] = useState<Boolean>(true)
-  const [adminDrop, setAdminDrop] = useState<Boolean>(false)
+  const [isSplash, setIsSplash] = useState<Boolean>(true);
+  const [adminDrop, setAdminDrop] = useState<Boolean>(false);
 
   useEffect(():void => {
     let realBody: Element | null = document.getElementById("super-wrapper")
@@ -31,11 +60,11 @@ function App() {
         if(adminDrop === true)
         setAdminDrop(false)
       })
-    }
+    };
 
     let navLinksDiv: Element | null = document.getElementById("nav-links")
-    console.log(navLinksDiv)
     let navLinks: HTMLCollectionOf<Element> | undefined = navLinksDiv?.getElementsByClassName("navlink")
+
     if (navLinks) {
       console.log(navLinks)
       for(let i = 0; i < navLinks.length; i++) {
@@ -49,6 +78,12 @@ function App() {
         });
       }
     }
+
+    // check for state 
+    let jwt: string | null = localStorage.getItem('JWT');
+    if (jwt) {
+       initialState.userObj = jwt_decode(jwt)
+      }
   });
 
   const toggleDropdown = ():void => {
@@ -56,42 +91,44 @@ function App() {
   }
 
   return (
-    <Router>
-      <nav>
-        <div id="nav-logo">
-          <Link to="/"><p id="login-heading-nav">Barbell Club</p></Link>
-        </div>
-        <div id="nav-links">
-          <Link className="navlink" to="/muscles">Muscles</Link>
-          <Link className="navlink" to="/exercises">Exercises</Link>
-          <Link className="navlink" to="/workouts">Workouts</Link>
-          <Link className="navlink" to="/training-plans">Training Plan</Link>
-        </div>
-        <div id="nav-admin-link">
-          <button onClick={toggleDropdown}>Administration</button>
-        {adminDrop &&
-          <div id="dropdown-menu">
-            <Link to="/">Dashboard</Link>
-            <Link to="/trainees">Trainees</Link>
-            <Link to="/users">Users</Link>
-            <Link to="media">Media</Link>
+    <StateProvider>
+      <Router>
+        <nav>
+          <div id="nav-logo">
+            <Link to="/"><p id="login-heading-nav">Barbell Club</p></Link>
           </div>
-        }
+          <div id="nav-links">
+            <Link className="navlink" to="/muscles">Muscles</Link>
+            <Link className="navlink" to="/exercises">Exercises</Link>
+            <Link className="navlink" to="/workouts">Workouts</Link>
+            <Link className="navlink" to="/training-plans">Training Plan</Link>
+          </div>
+          <div id="nav-admin-link">
+            <button onClick={toggleDropdown}>Administration</button>
+          {adminDrop &&
+            <div id="dropdown-menu">
+              <Link to="/">Dashboard</Link>
+              <Link to="/trainees">Trainees</Link>
+              <Link to="/users">Users</Link>
+              <Link to="media">Media</Link>
+            </div>
+          }
+          </div>
+        </nav>
+        <div id="super-wrapper">
+        <Switch>
+          <Route exact path="/" component={Splash}/>
+          <Route exact path="/muscles" component={Muscles}/>
+          <Route exact path="/exercises" component={Exercises}/>
+          <Route exact path="/workouts" component={Workouts}/>
+          <Route exact path="/training-plans" component={TrainingPlans}/>
+          <Route exact path="/trainees" component={Trainees}/>
+          <Route exact path="/users" component={Users}/>
+          <Route exact path="/media" component={Media}/>
+        </Switch>
         </div>
-      </nav>
-      <div id="super-wrapper">
-      <Switch>
-        <Route exact path="/" component={Splash}/>
-        <Route exact path="/muscles" component={Muscles}/>
-        <Route exact path="/exercises" component={Exercises}/>
-        <Route exact path="/workouts" component={Workouts}/>
-        <Route exact path="/training-plans" component={TrainingPlans}/>
-        <Route exact path="/trainees" component={Trainees}/>
-        <Route exact path="/users" component={Users}/>
-        <Route exact path="/media" component={Media}/>
-      </Switch>
-      </div>
-    </Router>
+      </Router>
+    </StateProvider>
   );
 }
 
