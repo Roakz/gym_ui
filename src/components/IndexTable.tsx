@@ -1,15 +1,59 @@
 import Table from 'react-bootstrap/Table';
-import AddCard from '../components/AddCard';
 import React, {useEffect} from 'react';
+import axiosClient from '../configs/axiosConfig';
+import {Dispatch, SetStateAction} from 'react';
 
 interface IndexTableProps {
   columnHeaders: Array<String>
   entity: String
   userData?: Array<any>
   createAble: boolean
+  setCreatable?: Dispatch<SetStateAction<boolean>>;
+  setUserData?: Dispatch<SetStateAction<boolean>>;
+  fetchUsers?: Function;
+}
+
+interface IUserObject {
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobilePhone: string;
+  username: string;
+  role: string;
+  passwordReset: boolean;
+  password: string;
 }
 
 function IndexTable(props: IndexTableProps){  
+
+  const createAction = ():void =>{
+    let dataObj: any;
+    if (props.entity === "User") {
+      let userObj: IUserObject = {
+        firstName: (document.getElementById("firstname") as HTMLInputElement).value,
+        lastName: (document.getElementById("lastname") as HTMLInputElement).value,
+        email: (document.getElementById("email") as HTMLInputElement).value,
+        mobilePhone: (document.getElementById("phone") as HTMLInputElement).value,
+        username: (document.getElementById("username") as HTMLInputElement).value,
+        role: (document.getElementById("role-options") as HTMLInputElement).value,
+        passwordReset: true,
+        password: "test"
+      }
+      dataObj = userObj
+    }
+
+    axiosClient.post('user', dataObj)
+    .then((res: any) => {
+      if (res.status === 200) {
+        if (props.setCreatable){
+          props.setCreatable(false)
+          if (props.fetchUsers) {
+            props.fetchUsers()
+          }
+        }
+      }
+    })
+  }
 
   return (
     <>
@@ -24,6 +68,7 @@ function IndexTable(props: IndexTableProps){
         </thead>
         <tbody>
           {props.entity === "User" && props.userData && props.userData.map((userObj: any) => {
+            console.log(userObj)
             return (
               <tr>
                 <td>{userObj.userId}</td>
@@ -46,25 +91,25 @@ function IndexTable(props: IndexTableProps){
               <input id="lastname" type="text" name="secondname" placeholder="secondname"/>
             </td>
             <td>
-              <input id="username" type="text" name="username"/>
+              <input id="username" type="text" name="username" placeholder="username"/>
             </td>
             <td>
-              <input id="email" type="text" name="email"/>
+              <input id="email" type="text" name="email" placeholder="email"/>
             </td>
             <td>
-              <input id="phone" type="text" name="phone"/>
+              <input id="phone" type="text" name="phone" placeholder="phone"/>
             </td>
             <td>
-              <select id="cars" name="cars">
-                <option value="trainee">Trainee</option>
-                <option value="trainer">Trainer</option>
-                <option value="admin">Admin</option>
+              <select id="role-options" name="roles">
+                <option value="Trainee">Trainee</option>
+                <option value="Trainer">Trainer</option>
+                <option value="Admin">Admin</option>
               </select>
             </td>
             <td>
               * Populated on save
             </td>
-            <td><button>save</button></td>
+            <td><button onClick={createAction}>save</button></td>
           </tr>
           }
         </tbody>

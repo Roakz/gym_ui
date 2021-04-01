@@ -20,7 +20,7 @@ function UsersPage() {
   const [userData, setUserData] = useState<any>(null);
   const [createAble, setCreatable] = useState<boolean>(false);
 
-  useEffect(() => {
+  function fetchUsers() {
     axiosInstance.get('user')
       .then(async (res: any) => {
 
@@ -32,7 +32,7 @@ function UsersPage() {
             fullName: doc.firstName + " " + doc.lastName,
             username: doc.username,
             email: doc.email,
-            phone: doc.phone,
+            phone: doc.mobilePhone,
             resetLink: 'Some link here',
             role: doc.role
           };
@@ -40,6 +40,10 @@ function UsersPage() {
         });
         setUserData(tempArray);
       });
+  }
+
+  useEffect(() => {
+    fetchUsers()
   }, []);
 
   return (
@@ -54,6 +58,9 @@ function UsersPage() {
         entity="User"
         userData={userData}
         createAble={createAble}
+        setCreatable={setCreatable}
+        setUserData={setUserData}
+        fetchUsers={fetchUsers}
       />
       <AddCard entity="User" setCreatable={setCreatable}/>
     </div>
