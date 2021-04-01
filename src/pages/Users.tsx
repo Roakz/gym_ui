@@ -3,6 +3,7 @@ import IndexTable from '../components/IndexTable'
 import SearchCard from '../components/SearchCard'
 import axiosInstance from '../configs/axiosConfig';
 import {useState, useEffect} from 'react';
+import AddCard from '../components/AddCard';
 
 function UsersPage() {
 
@@ -16,8 +17,8 @@ function UsersPage() {
     role: string;
   }
 
-
   const [userData, setUserData] = useState<any>(null);
+  const [createAble, setCreatable] = useState<boolean>(false);
 
   useEffect(() => {
     axiosInstance.get('user')
@@ -52,7 +53,9 @@ function UsersPage() {
         columnHeaders={["Full Name", "Username", "Email", "Phone", "Role", "Password Reset"]}
         entity="User"
         userData={userData}
-         />
+        createAble={createAble}
+      />
+      <AddCard entity="User" setCreatable={setCreatable}/>
     </div>
   );
 }

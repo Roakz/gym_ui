@@ -10,7 +10,11 @@ const TraineePage: React.FC = () => {
         <p className="table-heading">
           Trainees
         </p>
-        <IndexTable columnHeaders={["Full Name", "Current Plan", "Latest Media" ]} entity="Trainee"/>
+        <IndexTable
+          columnHeaders={["Full Name", "Current Plan", "Latest Media" ]} 
+          entity="Trainee"
+          createAble={false}
+        />
     </div>
   )
 };
