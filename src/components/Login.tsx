@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { store } from '../App';
 import jwt_decode from "jwt-decode";
-
-const axios = require('axios').default;
+import axiosInstance from '../configs/axiosConfig';
 
 const LoginComponent: React.FC = () => {
 
@@ -29,7 +28,7 @@ const LoginComponent: React.FC = () => {
     requestObject.username = usernameElement ? usernameElement.value : null;
     requestObject.password = passwordElement ? passwordElement.value : null;
 
-    axios.post("http://localhost:8000/authenticate", requestObject)
+    axiosInstance.post("authenticate", requestObject)
     .then((res: any) => {
       if (res.status == 200) {
         console.log(res.data.jwt_token)
