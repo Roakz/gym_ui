@@ -22,25 +22,23 @@ function UsersPage() {
 
   function fetchUsers() {
     axiosInstance.get('user')
-      .then(async (res: any) => {
-
-        let tempArray: Array<IUserObject> = [];
-
-        await res.data.documents.map((doc: any) => {
-          let obj: IUserObject = {
-            userId: doc._id,
-            fullName: doc.firstName + " " + doc.lastName,
-            username: doc.username,
-            email: doc.email,
-            phone: doc.mobilePhone,
-            resetLink: 'Some link here',
-            role: doc.role
-          };
-          tempArray.push(obj);
-        });
-        setUserData(tempArray);
+    .then(async (res: any) => {
+      let tempArray: Array<IUserObject> = [];
+      await res.data.documents.map((doc: any) => {
+        let obj: IUserObject = {
+          userId: doc._id,
+          fullName: doc.firstName + " " + doc.lastName,
+          username: doc.username,
+          email: doc.email,
+          phone: doc.mobilePhone,
+          resetLink: 'Some link here',
+          role: doc.role
+        };
+        tempArray.push(obj);
       });
-  }
+      setUserData(tempArray);
+    });
+  };
 
   useEffect(() => {
     fetchUsers()
