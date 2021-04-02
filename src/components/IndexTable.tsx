@@ -1,7 +1,11 @@
 import Table from 'react-bootstrap/Table';
+import Alert from 'react-bootstrap/Alert';
 import React, {useEffect, useState} from 'react';
 import axiosClient from '../configs/axiosConfig';
 import {Dispatch, SetStateAction} from 'react';
+import axios from 'axios';
+
+const generator = require('generate-password');
 
 interface IndexTableProps {
   columnHeaders: Array<String>
@@ -31,15 +35,24 @@ interface IEditUserObj {
   mobilePhone: string;
   username: string;
   role: string;
+  userId: string
 }
 
 function IndexTable(props: IndexTableProps){  
 
   const [editable, setEditable] = useState<boolean>(false);
   const [editableId, setEditableId] = useState<string>("");
+  const [tempPassword, setTempPassword] = useState<string>("");
+  const [userEditedFlash, setUserEditedFlash] = useState<boolean>(false);
 
   const createAction = ():void =>{
+
     let dataObj: any;
+    let password = generator.generate({
+      length: 6,
+      numbers: true
+    })
+
     if (props.entity === "User") {
       let userObj: IUserObject = {
         firstName: (document.getElementById("firstname") as HTMLInputElement).value,
@@ -49,8 +62,7 @@ function IndexTable(props: IndexTableProps){
         username: (document.getElementById("username") as HTMLInputElement).value,
         role: (document.getElementById("role-options") as HTMLInputElement).value,
         passwordReset: true,
-        //  change to auto generate and create popup on screen
-        password: "test"
+        password: password
       }
       dataObj = userObj
     }
@@ -58,10 +70,13 @@ function IndexTable(props: IndexTableProps){
     axiosClient.post('user', dataObj)
     .then((res: any) => {
       if (res.status === 200) {
+        setTempPassword(tempPassword)
         if (props.setCreatable){
           props.setCreatable(false)
           if (props.fetchUsers) {
             props.fetchUsers()
+            setTempPassword(password)
+            window.scrollTo(0,0);
           }
         }
       }
@@ -69,17 +84,27 @@ function IndexTable(props: IndexTableProps){
   }
 
   const editAction = (event: any):void => {
-    let userId = event.target.parentElement.getElementsByTagName('td')[0].innerHTML
-    // replace with event values
     let userObj: IEditUserObj = {
-      firstName: "tba",
-      lastName: "tba",
-      email: "tba",
-      mobilePhone: "tba",
-      username: "tba",
-      role: "tba"
+      userId: editableId,
+      firstName: (document.getElementById("edit-firstname") as HTMLInputElement).value,
+      lastName: (document.getElementById("edit-lastname") as HTMLInputElement).value,
+      email: (document.getElementById("edit-email") as HTMLInputElement).value,
+      mobilePhone: (document.getElementById("edit-phone") as HTMLInputElement).value,
+      username: (document.getElementById("edit-username") as HTMLInputElement).value,
+      role: (document.getElementById("edit-role-options") as HTMLInputElement).value,
     }
-    axiosClient.put(`user/${userId}`, userObj)
+    
+    axiosClient.put(`user/${userObj.userId}`, userObj)
+    .then((res: any) => {
+      if(res.status === 200) {
+        setEditable(false)
+        if(props.fetchUsers){
+          props.fetchUsers()
+          setUserEditedFlash(true)
+          window.scrollTo(0,0);
+        }
+      }
+    })
   }
 
   const editableOnClick = (event: any):void => {
@@ -89,6 +114,20 @@ function IndexTable(props: IndexTableProps){
 
   return (
     <>
+      {userEditedFlash && <Alert variant='success' onClose={()=> setUserEditedFlash(false)} dismissible>User successfully updated!</Alert>}
+      {tempPassword &&
+        <Alert variant='success' onClose={()=> setTempPassword("")} dismissible>
+          <Alert.Heading>User Created!</Alert.Heading>
+            <p>
+              Please provide this password to the user. They will be prompted to change it on the first login.
+              You will not have access to this password when you close this popup. Should this occur then reset the users password.
+            </p>
+            <hr />
+            <p className="mb-0">
+              The users temp password is: {`${tempPassword}`}
+            </p>
+        </Alert>
+      }
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -124,20 +163,20 @@ function IndexTable(props: IndexTableProps){
                     * not editable
                   </td>
                   <td>
-                    <input id="firstname" type="text" name="firstname" placeholder={`${userObj.fullName.split(" ")[0]}`}/>
-                    <input id="lastname" type="text" name="secondname" placeholder={`${userObj.fullName.split(" ")[1]}`}/>
+                    <input id="edit-firstname" type="text" name="firstname" defaultValue={`${userObj.fullName.split(" ")[0]}`}/>
+                    <input id="edit-lastname" type="text" name="secondname" defaultValue={`${userObj.fullName.split(" ")[1]}`}/>
                   </td>
                   <td>
-                    <input id="username" type="text" name="username" placeholder={`${userObj.username}`}/>
+                    <input id="edit-username" type="text" name="username" defaultValue={`${userObj.username}`}/>
                   </td>
                   <td>
-                    <input id="email" type="text" name="email" placeholder={`${userObj.email}`}/>
+                    <input id="edit-email" type="text" name="email" defaultValue={`${userObj.email}`}/>
                   </td>
                   <td>
-                    <input id="phone" type="text" name="phone" placeholder={`${userObj.phone}`}/>
+                    <input id="edit-phone" type="text" name="phone" defaultValue={`${userObj.phone}`}/>
                   </td>
                   <td>
-                    <select id="role-options" name="roles">
+                    <select id="edit-role-options" name="roles">
                       <option value="Trainee">Trainee</option>
                       <option value="Trainer">Trainer</option>
                       <option value="Admin">Admin</option>
