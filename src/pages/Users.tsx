@@ -2,7 +2,7 @@ import * as React from 'react';
 import IndexTable from '../components/IndexTable'
 import SearchCard from '../components/SearchCard'
 import axiosInstance from '../configs/axiosConfig';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import AddCard from '../components/AddCard';
 
 function UsersPage() {
@@ -60,7 +60,7 @@ function UsersPage() {
         setUserData={setUserData}
         fetchUsers={fetchUsers}
       />
-      <AddCard entity="User" setCreatable={setCreatable}/>
+      <AddCard entity="User" setCreatable={setCreatable} />
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import axiosClient from '../configs/axiosConfig';
 import {Dispatch, SetStateAction} from 'react';
-import axios from 'axios';
+
 
 const generator = require('generate-password');
 
@@ -15,6 +15,7 @@ interface IndexTableProps {
   setCreatable?: Dispatch<SetStateAction<boolean>>;
   setUserData?: Dispatch<SetStateAction<boolean>>;
   fetchUsers?: Function;
+  bottomRef?: any;
 }
 
 interface IUserObject {
@@ -44,6 +45,7 @@ function IndexTable(props: IndexTableProps){
   const [editableId, setEditableId] = useState<string>("");
   const [tempPassword, setTempPassword] = useState<string>("");
   const [userEditedFlash, setUserEditedFlash] = useState<boolean>(false);
+  
 
   const createAction = ():void =>{
 
@@ -83,7 +85,7 @@ function IndexTable(props: IndexTableProps){
     })
   }
 
-  const editAction = (event: any):void => {
+  const editAction = ():void => {
     let userObj: IEditUserObj = {
       userId: editableId,
       firstName: (document.getElementById("edit-firstname") as HTMLInputElement).value,
@@ -113,7 +115,7 @@ function IndexTable(props: IndexTableProps){
   }
 
   return (
-    <>
+    <div ref={props.bottomRef}>
       {userEditedFlash && <Alert variant='success' onClose={()=> setUserEditedFlash(false)} dismissible>User successfully updated!</Alert>}
       {tempPassword &&
         <Alert variant='success' onClose={()=> setTempPassword("")} dismissible>
@@ -139,9 +141,10 @@ function IndexTable(props: IndexTableProps){
         </thead>
         <tbody>
           {props.entity === "User" && props.userData && props.userData.map((userObj: any) => {
-            return (
+            if (!editableId || editableId && editableId != userObj.userId){
+              return (
               <tr onClick={editableOnClick}>
-              {!editableId || editableId && editableId != userObj.userId}
+              
                 <>
                   <td id={`${userObj.userId}`}>{userObj.userId}</td>
                   <td>{userObj.fullName}</td>
@@ -153,6 +156,7 @@ function IndexTable(props: IndexTableProps){
                 </>
               </tr>         
             )
+            }
           })}
 
           { editable === true && props.userData && props.userData.map((userObj)=>{
@@ -221,10 +225,10 @@ function IndexTable(props: IndexTableProps){
               <td><button onClick={createAction}>save</button></td>
             </tr>
           }
-        </tbody>
+        </tbody >
       </Table>
       <hr></hr>
-    </>
+    </div>
   )
 };
 
